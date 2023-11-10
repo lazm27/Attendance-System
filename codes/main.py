@@ -9,25 +9,28 @@ from firebase_admin import credentials
 from firebase_admin import db
 from firebase_admin import storage
 from datetime import datetime
-cred = credentials.Certificate('C:/Users/lazee/OneDrive/Documents/facialrecognition_project/serviceaccountkey.json')
+import os
+from dotenv import load_dotenv 
+load_dotenv()
+cred = credentials.Certificate('serviceaccountkey.json')
 firebase_admin.initialize_app(cred,{
-    'databaseURL': "https://facial-recognition-8e923-default-rtdb.firebaseio.com/",
-    'storageBucket': 'facial-recognition-8e923.appspot.com'
+    'databaseURL': os.getenv("DATABASEURL"),
+    'storageBucket': os.getenv("STORAGE_BUCKET")
 })
 bucket=storage.bucket()
 
 cap=cv2.VideoCapture(0)
-imgbackground=cv2.imread('C:/Users/lazee/OneDrive/Documents/facialrecognition_project/resources/background.png')
+imgbackground=cv2.imread('./resources/background.png')
 cap.set(3,640)
 cap.set(4,480)
 I=[]
-loc='C:/Users/lazee/OneDrive/Documents/facialrecognition_project/resources/Modes/'
+loc='./resources/Modes/'
 folder=os.listdir(loc)
 locmode=[]
 for i in folder:
     locmode.append(cv2.imread(os.path.join(loc,i)))
     
-file= open('C:/Users/lazee/OneDrive/Documents/facialrecognition_project/codes/Encoderfile.p','rb')
+file= open('./codes/Encoderfile.p','rb')
 Encoding=pickle.load(file)
 file.close()
 encodinglist, studentid=Encoding
@@ -70,7 +73,7 @@ while True:
             if counter!=0:
                 if counter==1:
                     studentinfo=db.reference(f'Students/{id}').get()
-                    blob=bucket.get_blob(f'C:/Users/lazee/OneDrive/Documents/facialrecognition_project/images/{id}.jpg')
+                    blob=bucket.get_blob(f'./images/{id}.jpg')
                     array=np.frombuffer(blob.download_as_string(),np.uint8)
                     imgstud=cv2.imdecode(array, cv2.COLOR_BGRA2BGR)
                     

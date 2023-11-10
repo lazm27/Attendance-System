@@ -1,9 +1,12 @@
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
-cred = credentials.Certificate('C:/Users/lazee/OneDrive/Documents/facialrecognition_project/serviceaccountkey.json')
+import os
+from dotenv import load_dotenv
+load_dotenv()
+cred = credentials.Certificate('serviceaccountkey.json')
 firebase_admin.initialize_app(cred,{
-    'databaseURL': "https://facial-recognition-8e923-default-rtdb.firebaseio.com/"
+    'databaseURL': os.getenv("DATABASEURL"),
 })
 
 ref=db.reference('Students')

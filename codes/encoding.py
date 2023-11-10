@@ -6,13 +6,15 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
 from firebase_admin import storage
-cred = credentials.Certificate('C:/Users/lazee/OneDrive/Documents/facialrecognition_project/serviceaccountkey.json')
+from dotenv import load_dotenv
+load_dotenv()
+cred = credentials.Certificate('serviceaccountkey.json')
 firebase_admin.initialize_app(cred,{
-    'databaseURL': "https://facial-recognition-8e923-default-rtdb.firebaseio.com/",
-    'storageBucket': 'facial-recognition-8e923.appspot.com'
+    'databaseURL': os.getenv("DATABASEURL"),
+    'storageBucket': os.getenv("STORAGE_BUCKET")
 })
 
-loc='C:/Users/lazee/OneDrive/Documents/facialrecognition_project/images/'
+loc='.\images'
 folder=os.listdir(loc)
 locimg=[]
 studentid=[]
@@ -40,7 +42,7 @@ encodedlist=encoder(locimg)
 encodel=[encodedlist,studentid]
 print("Encoding ended")
 
-file = open('C:/Users/lazee/OneDrive/Documents/facialrecognition_project/codes/Encoderfile.p','wb')
+file = open('codes\encoding.py','wb')
 pickle.dump(encodel,file)
 file.close()
 print('File saved')
